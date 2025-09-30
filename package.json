@@ -1,0 +1,40 @@
+{
+  "name": "accessible-flatpickr",
+  "version": "1.0.0",
+  "description": "WCAG-compliant keyboard navigation and screen reader support for Flatpickr",
+  "main": "dist/accessible-flatpickr.js",
+  "types": "dist/accessible-flatpickr.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "flatpickr",
+    "accessibility",
+    "a11y",
+    "keyboard-navigation",
+    "screen-reader",
+    "wcag"
+  ],
+  "author": "Accessible Flatpickr Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "flatpickr": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> 
+    <title>Accessible Flatpickr Demo</title>
+    <style>
+        .container {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .demo-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="date"], select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-left: 4px solid #007acc;
+            border-radius: 4px;
+        }
+
+        .instructions h3 {
+            margin-top: 0;
+            color: #007acc;
+        }
+
+        .instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .code-example {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        /* .sr-only {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        } */
+    </style>
+</head>
+<body>
+
+    <main class="container">
+    <h1>Accessible Flatpickr Demo</h1>
+    <p>This demo showcases the accessibility enhancements for Flatpickr, including keyboard navigation, screen reader support, and proper ARIA attributes.</p>
+
+    <div class="instructions">
+        <h2>Keyboard Navigation Instructions</h2>
+        <ul>
+            <li><strong>Tab</strong> - Navigate between form elements</li>
+            <li><strong>Arrow Keys</strong> - Navigate between dates in the calendar</li>
+            <li><strong>Home</strong> - Jump to the first day of the month</li>
+            <li><strong>End</strong> - Jump to the last day of the month</li>
+            <li><strong>Page Up/Down</strong> - Navigate between months (Shift+Page Up/Down for years)</li>
+            <li><strong>Enter/Space</strong> - Select a date</li>
+            <li><strong>Escape</strong> - Close the calendar</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>Basic Date Picker</h2>
+        <div class="form-group">
+            <label for="basic-date">Select Date:</label>
+            <input type="text" id="basic-date" placeholder="Click to select date">
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Date Range Picker</h2>
+        <div class="form-group">
+            <label for="start-date">Start Date:</label>
+            <input type="text" id="start-date" placeholder="Start date">
+        </div>
+        <div class="form-group">
+            <label for="end-date">End Date:</label>
+            <input type="text" id="end-date" placeholder="End date">
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Date with Time</h2>
+        <div class="form-group">
+            <label for="datetime">Select Date and Time:</label>
+            <input type="text" id="datetime" placeholder="Select date and time">
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Language Selection</h2>
+        <div class="form-group">
+            <label for="language-select">Language:</label>
+            <select id="language-select">
+                <option value="EN">English</option>
+                <option value="PL">Polski</option>
+                <option value="DA">Dansk</option>
+                <option value="SV">Svenska</option>
+                <option value="NO">Norsk</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="localized-date">Localized Date:</label>
+            <input type="text" id="localized-date" placeholder="Select date">
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Disabled Dates</h2>
+        <div class="form-group">
+            <label for="disabled-date">Date with Restrictions:</label>
+            <input type="text" id="disabled-date" placeholder="Select date">
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h3>Screen Reader Testing</h3>
+        <p>Try using a screen reader with these date pickers. You should hear:</p>
+        <ul>
+            <li>Calendar opened/closed announcements</li>
+            <li>Date selection announcements</li>
+            <li>Proper date descriptions including month, year, and context (today, previous/next month)</li>
+            <li>Navigation instructions</li>
+        </ul>
+    </div>
+
+    <div class="code-example">
+// Usage Examples:
+
+// 1. Include flatpickr: &lt;script src="https://cdn.jsdelivr.net/npm/flatpickr"&gt;&lt;/script&gt;
+// 2. Include this script: &lt;script src="accessible-flatpickr.js"&gt;&lt;/script&gt;
+// 3. Initialize normally - it will be automatically enhanced
+
+// Or use the enhanced initialization:
+const fp = window.initAccessibleFlatpickr('#my-input', options);
+
+// Set language
+window.accessibleFlatpickrLanguage = 'PL';
+
+// Add custom locale
+import { registerLocale } from 'accessible-flatpickr';
+registerLocale('FR', {
+  calendarOpened: "Calendrier ouvert",
+  // ... other translations
+});
+    </div>
+
+    <!-- Load dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="module">
+        import '../dist/accessible-flatpickr.umd.js';
+
+        // Basic date picker
+        flatpickr('#basic-date', {
+            dateFormat: 'Y-m-d'
+        });
+
+        // Date range picker
+        flatpickr('#start-date', {
+            dateFormat: 'Y-m-d',
+            mode: 'range'
+        });
+
+        flatpickr('#end-date', {
+            dateFormat: 'Y-m-d',
+            mode: 'range'
+        });
+
+        // Date with time
+        flatpickr('#datetime', {
+            enableTime: true,
+            dateFormat: 'Y-m-d H:i'
+        });
+
+        // Localized date picker
+        const localizedPicker = flatpickr('#localized-date', {
+            dateFormat: 'Y-m-d'
+        });
+
+        // Language switcher
+        document.getElementById('language-select').addEventListener('change', function() {
+            window.accessibleFlatpickrLanguage = this.value;
+            localizedPicker.destroy();
+            flatpickr('#localized-date', {
+                dateFormat: 'Y-m-d'
+            });
+        });
+
+        // Date with restrictions
+        flatpickr('#disabled-date', {
+            dateFormat: 'Y-m-d',
+            minDate: 'today',
+            maxDate: new Date().fp_incr(30) // 30 days from now
+        });
+    </script>
+    </main>
+</body>
+</html>
