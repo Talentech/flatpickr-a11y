@@ -23,7 +23,6 @@ export class NavigationEnhancer {
       prevButton.setAttribute('aria-label', t('previousMonthButton', instance));
       prevButton.setAttribute('role', 'button');
       prevButton.setAttribute('tabindex', '0');
-
       prevButton.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -42,7 +41,6 @@ export class NavigationEnhancer {
       nextButton.setAttribute('aria-label', t('nextMonthButton', instance));
       nextButton.setAttribute('role', 'button');
       nextButton.setAttribute('tabindex', '0');
-
       nextButton.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();

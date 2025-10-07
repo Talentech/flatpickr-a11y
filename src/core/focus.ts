@@ -1,5 +1,4 @@
 import type { FocusManager, FlatpickrInstance } from '../types';
-import { getAllNavigableDays, moveFocusToDay } from '../utils/dom';
 
 /**
  * Focus management for accessibility

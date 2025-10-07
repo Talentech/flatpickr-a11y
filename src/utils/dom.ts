@@ -11,14 +11,6 @@ export function isElementDisabled(element: HTMLElement): boolean {
 }
 
 /**
- * Check if an element is from previous/next month
- */
-export function isFromOtherMonth(element: HTMLElement): boolean {
-  return element.classList.contains('prevMonthDay') ||
-         element.classList.contains('nextMonthDay');
-}
-
-/**
  * Get all navigable days in the calendar
  */
 export function getAllNavigableDays(calendar: HTMLElement): HTMLElement[] {
