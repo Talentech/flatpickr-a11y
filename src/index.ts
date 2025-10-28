@@ -12,36 +12,28 @@ let originalFlatpickr: any = null;
 /**
  * Enhanced flatpickr initialization with accessibility features
  */
-export function initAccessibleFlatpickr(selector: string | Element, options: AccessibleFlatpickrOptions = {}): FlatpickrInstance | null {
-  if (!originalFlatpickr) {
-    console.error('Flatpickr is not loaded. Please include flatpickr before this script.');
-    return null;
-  }
-
-  // Ensure announcer is set up
-  screenReaderAnnouncer.setup();
-
-  const defaultOptions: AccessibleFlatpickrOptions = {
-    onReady: function(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
+export function createDefaultOptions(options: AccessibleFlatpickrOptions = {}): AccessibleFlatpickrOptions {
+  return {
+    onReady(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
       accessibilityEnhancer.enhance(instance);
       options.onReady?.(selectedDates, dateStr, instance);
     },
 
-    onOpen: function(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
+    onOpen(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
       screenReaderAnnouncer.announce(t('calendarOpened', instance));
       focusManager.manageFocusOnOpen(instance);
       clickOutsideHandler.setup(instance);
       options.onOpen?.(selectedDates, dateStr, instance);
     },
 
-    onClose: function(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
+    onClose(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
       screenReaderAnnouncer.announce(t('calendarClosed', instance));
       focusManager.returnFocusToInput(instance);
       clickOutsideHandler.remove(instance);
       options.onClose?.(selectedDates, dateStr, instance);
     },
 
-    onChange: function(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
+    onChange(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
       if (dateStr) {
         const formattedDate = dateUtils.formatDateForScreenReader(selectedDates[0]);
         screenReaderAnnouncer.announce(`${t('dateSelected', instance)} ${formattedDate}`);
@@ -49,8 +41,7 @@ export function initAccessibleFlatpickr(selector: string | Element, options: Acc
       options.onChange?.(selectedDates, dateStr, instance);
     },
 
-    onDayCreate: function(dObj: Date, dStr: string, fp: FlatpickrInstance, dayElem: any) {
-      // Enhance day elements with accessibility features
+    onDayCreate(dObj: Date, dStr: string, fp: FlatpickrInstance, dayElem: any) {
       const dateObject = (dayElem as any).dateObj;
       if (dateObject) {
         const monthName = fp.l10n.months.longhand[dateObject.getMonth()];
@@ -72,9 +63,20 @@ export function initAccessibleFlatpickr(selector: string | Element, options: Acc
       options.onDayCreate?.(dObj, dStr, fp, dayElem);
     }
   };
+}
 
-  const finalOptions = { ...defaultOptions, ...options };
-  return originalFlatpickr(selector, finalOptions);
+export function initAccessibleFlatpickr(selector: string | Element, options: AccessibleFlatpickrOptions = {}): FlatpickrInstance | null {
+  if (!originalFlatpickr) {
+    console.error('Flatpickr is not loaded. Please include flatpickr before this script.');
+    return null;
+  }
+
+  screenReaderAnnouncer.setup();
+
+  // Merge: user's config options + enhanced handlers (handlers take precedence)
+  const enhancedOptions = { ...options, ...createDefaultOptions(options) };
+
+  return originalFlatpickr(selector, enhancedOptions);
 }
 
 /**
@@ -95,31 +97,17 @@ function autoEnhanceFlatpickr(): void {
 
   // Override the global flatpickr function to automatically enhance instances
   (window as any).flatpickr = function(selector: string | Element, options: AccessibleFlatpickrOptions = {}) {
-    const instance = originalFlatpickr(selector, options);
+    // Merge: user's config options + enhanced handlers (handlers take precedence)
+    const enhancedOptions = { ...options, ...createDefaultOptions(options) };
+    
+    // Create instance with enhanced options
+    const instance = originalFlatpickr(selector, enhancedOptions);
 
-    // Enhance the instance after creation
+    // Enhance the instance after creation for additional DOM enhancements
     if (instance && instance.calendarContainer) {
       // Use setTimeout to ensure the calendar is fully rendered
       setTimeout(() => {
         accessibilityEnhancer.enhance(instance);
-
-        // Set up event handlers for aria-expanded state management
-        const originalOnOpen = instance.config.onOpen;
-        const originalOnClose = instance.config.onClose;
-
-        instance.config.onOpen = function(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
-          screenReaderAnnouncer.announce(t('calendarOpened', instance));
-          focusManager.manageFocusOnOpen(instance);
-          clickOutsideHandler.setup(instance);
-          originalOnOpen?.(selectedDates, dateStr, instance);
-        };
-
-        instance.config.onClose = function(selectedDates: Date[], dateStr: string, instance: FlatpickrInstance) {
-          screenReaderAnnouncer.announce(t('calendarClosed', instance));
-          focusManager.returnFocusToInput(instance);
-          clickOutsideHandler.remove(instance);
-          originalOnClose?.(selectedDates, dateStr, instance);
-        };
       }, 10);
     }
 
@@ -132,7 +120,8 @@ function autoEnhanceFlatpickr(): void {
   // Also provide the enhanced initialization function
   (window as any).initAccessibleFlatpickr = initAccessibleFlatpickr;
 
-  console.log('Accessible Flatpickr enhancement loaded');
+
+  console.info('Accessible Flatpickr enhancement loaded');
 }
 
 /**

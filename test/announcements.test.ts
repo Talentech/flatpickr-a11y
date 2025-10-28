@@ -1,12 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ScreenReaderAnnouncerImpl } from '../src/utils/announcements';
 import { screenReaderAnnouncer } from '../src/utils/announcements';
+import { createDefaultOptions } from '../src/index';
+import { focusManager } from '../src/core/focus';
+import { clickOutsideHandler } from '../src/core/click-outside';
+import type { FlatpickrInstance } from '../src/types';
 
 describe('ScreenReaderAnnouncer', () => {
   let announcer: ScreenReaderAnnouncerImpl;
 
   beforeEach(() => {
     announcer = new ScreenReaderAnnouncerImpl();
+    vi.restoreAllMocks();
+    delete (globalThis as any).accessibleFlatpickrLanguage;
   });
 
   describe('announce', () => {
@@ -76,6 +82,32 @@ describe('ScreenReaderAnnouncer', () => {
       messages.forEach(message => {
         expect(() => screenReaderAnnouncer.announce(message)).not.toThrow();
       });
+    });
+  });
+
+  describe('onOpen announcements', () => {
+    it('should announce calendar open when default options are used', () => {
+      (globalThis as any).accessibleFlatpickrLanguage = 'EN';
+
+      const announceSpy = vi.spyOn(screenReaderAnnouncer, 'announce').mockImplementation(() => {});
+      vi.spyOn(focusManager, 'manageFocusOnOpen').mockImplementation(() => {});
+      vi.spyOn(clickOutsideHandler, 'setup').mockImplementation(() => {});
+
+      const mockInstance = {
+        calendarContainer: {} as HTMLElement,
+        element: {
+          setAttribute: vi.fn()
+        } as unknown as HTMLInputElement,
+        l10n: {
+          code: 'en',
+          months: { longhand: [] as string[] }
+        }
+      } as unknown as FlatpickrInstance;
+
+      const options = createDefaultOptions();
+      options.onOpen?.([], '', mockInstance);
+
+      expect(announceSpy).toHaveBeenCalledWith('Calendar opened');
     });
   });
 });
